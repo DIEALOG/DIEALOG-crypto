@@ -1,11 +1,7 @@
 package main
 
 import (
-	"context"
-	"fmt"
 	"log"
-	"net/http"
-	"time"
 
 	"github.com/gofiber/contrib/v3/swaggo"
 	"github.com/gofiber/fiber/v3"
@@ -17,22 +13,15 @@ import (
 	"github.com/gofiber/fiber/v3/middleware/logger"
 	"github.com/gofiber/fiber/v3/middleware/recover"
 	"github.com/gofiber/fiber/v3/middleware/requestid"
-	"github.com/janghanul090801/go-backend-clean-architecture-fiber/api/route"
-	"github.com/janghanul090801/go-backend-clean-architecture-fiber/config"
-	"github.com/janghanul090801/go-backend-clean-architecture-fiber/infra/database"
-	"github.com/janghanul090801/go-backend-clean-architecture-fiber/infra/repository"
-	"github.com/janghanul090801/go-backend-clean-architecture-fiber/usecase"
+
+	"github.com/DIEALOG/DIEALOG-crypto/api/route"
+	"github.com/DIEALOG/DIEALOG-crypto/config"
+	"github.com/DIEALOG/DIEALOG-crypto/infra/database"
+	"github.com/DIEALOG/DIEALOG-crypto/infra/kms"
+	"github.com/DIEALOG/DIEALOG-crypto/infra/repository"
+	"github.com/DIEALOG/DIEALOG-crypto/usecase"
 )
 
-// @title          Fiber Backend API
-// @version        1.0
-// @description    Fiber Backend API
-// @host			localhost:8080
-// @BasePath		/api
-// @securityDefinitions.apikey BearerAuth
-// @in header
-// @name Authorization
-// @description Enter your JWT token with the `Bearer ` prefix.
 func main() {
 	config.NewEnv()
 
@@ -63,7 +52,13 @@ func main() {
 
 	api := app.Group("/api")
 
+	app.Get("/swagger", func(c fiber.Ctx) error {
+		return c.Redirect().To("/swagger/index.html")
+	})
 	app.Get("/swagger/*", swaggo.HandlerDefault)
+	app.Get("/docs", func(c fiber.Ctx) error {
+		return c.Redirect().To("/docs/index.html")
+	})
 	app.Get("/docs/*", swaggo.HandlerDefault)
 
 	client, err := database.NewClient()
@@ -71,40 +66,15 @@ func main() {
 		panic(err)
 	}
 	defer client.Close()
+	kmsService := kms.NewMockKMSService([]byte(config.E.MockKMSMasterKey))
+	credRepo := repository.NewCredentialRepository(client)
+	credUseCase := usecase.NewCredentialUseCase(credRepo, kmsService)
 
-	if err = client.Schema.Create(context.Background()); err != nil {
-		panic(err)
+	route.NewCredentialRoute(api, credUseCase)
+
+	addr := config.E.ServerAddress
+	if len(addr) > 0 && addr[0] != ':' {
+		addr = ":" + addr
 	}
-
-	timeout := time.Duration(config.E.ContextTimeout) * time.Second
-
-	// repository
-	userRepository := repository.NewUserRepository(client)
-	taskRepository := repository.NewTaskRepository(client)
-
-	// usecase
-	profileUsecase := usecase.NewProfileUseCase(userRepository, timeout)
-	authUseCase := usecase.NewAuthUseCase(userRepository, timeout)
-	taskUsecase := usecase.NewTaskUseCase(taskRepository, timeout)
-
-	// router
-	route.NewLoginRouter(api.Group("/login"), authUseCase)
-	route.NewProfileRouter(api.Group("/profile"), profileUsecase)
-	route.NewRefreshTokenRouter(api.Group("/refresh"), authUseCase)
-	route.NewSignupRouter(api.Group("/signup"), authUseCase)
-	route.NewTaskRouter(api.Group("/task"), taskUsecase)
-
-	app.All("*", func(c fiber.Ctx) error {
-		notFoundErr := fmt.Errorf(
-			"route '%s' does not exist in this API",
-			c.OriginalURL(),
-		)
-
-		return c.Status(http.StatusNotFound).JSON(&fiber.Map{
-			"status": "error",
-			"error":  notFoundErr.Error(),
-		})
-	})
-
-	log.Fatal(app.Listen(config.E.ServerAddress))
+	log.Fatal(app.Listen(addr))
 }

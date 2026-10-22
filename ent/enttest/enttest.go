@@ -5,12 +5,12 @@ package enttest
 import (
 	"context"
 
-	"github.com/janghanul090801/go-backend-clean-architecture-fiber/ent"
+	"github.com/DIEALOG/DIEALOG-crypto/ent"
 	// required by schema hooks.
-	_ "github.com/janghanul090801/go-backend-clean-architecture-fiber/ent/runtime"
+	_ "github.com/DIEALOG/DIEALOG-crypto/ent/runtime"
 
 	"entgo.io/ent/dialect/sql/schema"
-	"github.com/janghanul090801/go-backend-clean-architecture-fiber/ent/migrate"
+	"github.com/DIEALOG/DIEALOG-crypto/ent/migrate"
 )
 
 type (

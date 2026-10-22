@@ -12,8 +12,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
-	"github.com/janghanul090801/go-backend-clean-architecture-fiber/ent/task"
-	"github.com/janghanul090801/go-backend-clean-architecture-fiber/ent/user"
+	"github.com/DIEALOG/DIEALOG-crypto/ent/credential"
 )
 
 // ent aliases to avoid import conflicts in user's code.
@@ -74,8 +73,7 @@ var (
 func checkColumn(t, c string) error {
 	initCheck.Do(func() {
 		columnCheck = sql.NewColumnCheck(map[string]func(string) bool{
-			task.Table: task.ValidColumn,
-			user.Table: user.ValidColumn,
+			credential.Table: credential.ValidColumn,
 		})
 	})
 	return columnCheck(t, c)

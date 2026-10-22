@@ -8,48 +8,26 @@ import (
 )
 
 var (
-	// TasksColumns holds the columns for the "tasks" table.
-	TasksColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeUUID},
-		{Name: "title", Type: field.TypeString},
-		{Name: "created_at", Type: field.TypeTime},
-		{Name: "task_owner", Type: field.TypeUUID},
+	// CredentialsColumns holds the columns for the "credentials" table.
+	CredentialsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "user_id", Type: field.TypeString},
+		{Name: "account_name", Type: field.TypeString},
+		{Name: "encrypted_password", Type: field.TypeBytes},
+		{Name: "encrypted_dek", Type: field.TypeBytes},
+		{Name: "nonce", Type: field.TypeBytes},
 	}
-	// TasksTable holds the schema information for the "tasks" table.
-	TasksTable = &schema.Table{
-		Name:       "tasks",
-		Columns:    TasksColumns,
-		PrimaryKey: []*schema.Column{TasksColumns[0]},
-		ForeignKeys: []*schema.ForeignKey{
-			{
-				Symbol:     "tasks_users_owner",
-				Columns:    []*schema.Column{TasksColumns[3]},
-				RefColumns: []*schema.Column{UsersColumns[0]},
-				OnDelete:   schema.Cascade,
-			},
-		},
-	}
-	// UsersColumns holds the columns for the "users" table.
-	UsersColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeUUID},
-		{Name: "name", Type: field.TypeString},
-		{Name: "email", Type: field.TypeString, Unique: true},
-		{Name: "password", Type: field.TypeString},
-		{Name: "created_at", Type: field.TypeTime},
-	}
-	// UsersTable holds the schema information for the "users" table.
-	UsersTable = &schema.Table{
-		Name:       "users",
-		Columns:    UsersColumns,
-		PrimaryKey: []*schema.Column{UsersColumns[0]},
+	// CredentialsTable holds the schema information for the "credentials" table.
+	CredentialsTable = &schema.Table{
+		Name:       "credentials",
+		Columns:    CredentialsColumns,
+		PrimaryKey: []*schema.Column{CredentialsColumns[0]},
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
-		TasksTable,
-		UsersTable,
+		CredentialsTable,
 	}
 )
 
 func init() {
-	TasksTable.ForeignKeys[0].RefTable = UsersTable
 }

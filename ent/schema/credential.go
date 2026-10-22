@@ -1,0 +1,20 @@
+package schema
+
+import (
+	"entgo.io/ent"
+	"entgo.io/ent/schema/field"
+)
+
+type Credential struct {
+	ent.Schema
+}
+
+func (Credential) Fields() []ent.Field {
+	return []ent.Field{
+		field.String("user_id"),
+		field.String("account_name"),
+		field.Bytes("encrypted_password"), // AES-256-GCM 암호문
+		field.Bytes("encrypted_dek"),      // KMS KEK로 암호화된 DEK
+		field.Bytes("nonce"),              // GCM Nonce (12 bytes)
+	}
+}

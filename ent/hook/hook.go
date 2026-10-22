@@ -6,31 +6,19 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/janghanul090801/go-backend-clean-architecture-fiber/ent"
+	"github.com/DIEALOG/DIEALOG-crypto/ent"
 )
 
-// The TaskFunc type is an adapter to allow the use of ordinary
-// function as Task mutator.
-type TaskFunc func(context.Context, *ent.TaskMutation) (ent.Value, error)
+// The CredentialFunc type is an adapter to allow the use of ordinary
+// function as Credential mutator.
+type CredentialFunc func(context.Context, *ent.CredentialMutation) (ent.Value, error)
 
 // Mutate calls f(ctx, m).
-func (f TaskFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	if mv, ok := m.(*ent.TaskMutation); ok {
+func (f CredentialFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.CredentialMutation); ok {
 		return f(ctx, mv)
 	}
-	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.TaskMutation", m)
-}
-
-// The UserFunc type is an adapter to allow the use of ordinary
-// function as User mutator.
-type UserFunc func(context.Context, *ent.UserMutation) (ent.Value, error)
-
-// Mutate calls f(ctx, m).
-func (f UserFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	if mv, ok := m.(*ent.UserMutation); ok {
-		return f(ctx, mv)
-	}
-	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.UserMutation", m)
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.CredentialMutation", m)
 }
 
 // Condition is a hook condition function.
