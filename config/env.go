@@ -17,8 +17,8 @@ type Env struct {
 	DBUser            string `mapstructure:"DB_USER"`
 	DBPass            string `mapstructure:"DB_PASS"`
 	DBName            string `mapstructure:"DB_NAME"`
-	InternalSecretKey string `mapstructure:"INTERNAL_SECRET_KEY"` // Public API <-> Internal Crypto Service 간 시크릿
-	KMSKeyARN         string `mapstructure:"KMS_KEY_ARN"`         // AWS KMS Key ARN
+	InternalSecretKey string `mapstructure:"INTERNAL_SECRET_KEY"`
+	KMSKeyARN         string `mapstructure:"KMS_KEY_ARN"` // AWS KMS Key ARN
 	MockKMSMasterKey  string `mapstructure:"MOCK_KMS_MASTER_KEY"`
 }
 
@@ -27,7 +27,7 @@ func NewEnv() {
 
 	err := viper.ReadInConfig()
 	if err != nil {
-		log.Fatal("Can't find the file .E : ", err)
+		log.Fatal("Can't find the file .env : ", err)
 	}
 
 	err = viper.Unmarshal(&E)
@@ -36,6 +36,6 @@ func NewEnv() {
 	}
 
 	if E.AppEnv == "development" {
-		log.Println("The App is running in development E")
+		log.Println("The App is running in development env")
 	}
 }
