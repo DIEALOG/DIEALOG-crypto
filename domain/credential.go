@@ -2,13 +2,11 @@ package domain
 
 import (
 	"context"
-
-	backend "github.com/DIEALOG/DIEALOG-backend/domain"
 )
 
 type Credential struct {
-	ID                backend.ID
-	UserID            backend.ID
+	ID                ID
+	UserID            ID
 	AccountName       string
 	EncryptedPassword []byte
 	EncryptedDEK      []byte
@@ -16,14 +14,14 @@ type Credential struct {
 }
 
 type StoreCredentialRequest struct {
-	UserID      backend.ID `json:"user_id"`
-	AccountName string     `json:"account_name"`
-	Password    string     `json:"password"`
+	UserID      ID     `json:"user_id"`
+	AccountName string `json:"account_name"`
+	Password    string `json:"password"`
 }
 
 type GetPasswordRequest struct {
-	UserID      backend.ID `json:"user_id"`
-	AccountName string     `json:"account_name"`
+	UserID      ID     `json:"user_id"`
+	AccountName string `json:"account_name"`
 }
 
 type KMSService interface {
@@ -33,10 +31,10 @@ type KMSService interface {
 
 type CredentialRepository interface {
 	Create(ctx context.Context, credential *Credential) error
-	GetByAccountName(ctx context.Context, userID *backend.ID, accountName string) (*Credential, error)
+	GetByAccountName(ctx context.Context, userID *ID, accountName string) (*Credential, error)
 }
 
 type CredentialUseCase interface {
-	StorePassword(ctx context.Context, userID *backend.ID, req *StoreCredentialRequest) error
-	GetPassword(ctx context.Context, userID *backend.ID, accountName string) ([]byte, error)
+	StorePassword(ctx context.Context, userID *ID, req *StoreCredentialRequest) error
+	GetPassword(ctx context.Context, userID *ID, accountName string) ([]byte, error)
 }

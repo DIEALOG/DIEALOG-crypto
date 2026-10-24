@@ -3,7 +3,6 @@ package repository
 import (
 	"context"
 
-	backend "github.com/DIEALOG/DIEALOG-backend/domain"
 	"github.com/DIEALOG/DIEALOG-crypto/domain"
 	"github.com/DIEALOG/DIEALOG-crypto/ent"
 	"github.com/DIEALOG/DIEALOG-crypto/ent/credential"
@@ -29,7 +28,7 @@ func (r *credentialRepository) Create(ctx context.Context, c *domain.Credential)
 	return err
 }
 
-func (r *credentialRepository) GetByAccountName(ctx context.Context, userID *backend.ID, accountName string) (*domain.Credential, error) {
+func (r *credentialRepository) GetByAccountName(ctx context.Context, userID *domain.ID, accountName string) (*domain.Credential, error) {
 	entCred, err := r.client.Credential.
 		Query().
 		Where(

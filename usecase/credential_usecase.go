@@ -3,7 +3,6 @@ package usecase
 import (
 	"context"
 
-	backend "github.com/DIEALOG/DIEALOG-backend/domain"
 	"github.com/DIEALOG/DIEALOG-crypto/domain"
 	"github.com/DIEALOG/DIEALOG-crypto/ent"
 	"github.com/DIEALOG/DIEALOG-crypto/internal/crypto"
@@ -21,7 +20,7 @@ func NewCredentialUseCase(repo domain.CredentialRepository, kms domain.KMSServic
 	}
 }
 
-func (u *credentialUseCase) StorePassword(ctx context.Context, userID *backend.ID, req *domain.StoreCredentialRequest) error {
+func (u *credentialUseCase) StorePassword(ctx context.Context, userID *domain.ID, req *domain.StoreCredentialRequest) error {
 	// 1. 메모리 소거용 byte 슬라이스
 	plainPassword := []byte(req.Password)
 	defer crypto.ZeroBytes(plainPassword)
@@ -52,7 +51,7 @@ func (u *credentialUseCase) StorePassword(ctx context.Context, userID *backend.I
 	return u.repo.Create(ctx, cred)
 }
 
-func (u *credentialUseCase) GetPassword(ctx context.Context, userID *backend.ID, accountName string) ([]byte, error) {
+func (u *credentialUseCase) GetPassword(ctx context.Context, userID *domain.ID, accountName string) ([]byte, error) {
 	cred, err := u.repo.GetByAccountName(ctx, userID, accountName)
 	if err != nil {
 		if ent.IsNotFound(err) {
