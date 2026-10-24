@@ -50,6 +50,20 @@ func (_c *CredentialCreate) SetNonce(v []byte) *CredentialCreate {
 	return _c
 }
 
+// SetID sets the "id" field.
+func (_c *CredentialCreate) SetID(v uuid.UUID) *CredentialCreate {
+	_c.mutation.SetID(v)
+	return _c
+}
+
+// SetNillableID sets the "id" field if the given value is not nil.
+func (_c *CredentialCreate) SetNillableID(v *uuid.UUID) *CredentialCreate {
+	if v != nil {
+		_c.SetID(*v)
+	}
+	return _c
+}
+
 // Mutation returns the CredentialMutation object of the builder.
 func (_c *CredentialCreate) Mutation() *CredentialMutation {
 	return _c.mutation
@@ -57,6 +71,7 @@ func (_c *CredentialCreate) Mutation() *CredentialMutation {
 
 // Save creates the Credential in the database.
 func (_c *CredentialCreate) Save(ctx context.Context) (*Credential, error) {
+	_c.defaults()
 	return withHooks(ctx, _c.sqlSave, _c.mutation, _c.hooks)
 }
 
@@ -79,6 +94,14 @@ func (_c *CredentialCreate) Exec(ctx context.Context) error {
 func (_c *CredentialCreate) ExecX(ctx context.Context) {
 	if err := _c.Exec(ctx); err != nil {
 		panic(err)
+	}
+}
+
+// defaults sets the default values of the builder before save.
+func (_c *CredentialCreate) defaults() {
+	if _, ok := _c.mutation.ID(); !ok {
+		v := credential.DefaultID()
+		_c.mutation.SetID(v)
 	}
 }
 
@@ -113,8 +136,13 @@ func (_c *CredentialCreate) sqlSave(ctx context.Context) (*Credential, error) {
 		}
 		return nil, err
 	}
-	id := _spec.ID.Value.(int64)
-	_node.ID = int(id)
+	if _spec.ID.Value != nil {
+		if id, ok := _spec.ID.Value.(*uuid.UUID); ok {
+			_node.ID = *id
+		} else if err := _node.ID.Scan(_spec.ID.Value); err != nil {
+			return nil, err
+		}
+	}
 	_c.mutation.id = &_node.ID
 	_c.mutation.done = true
 	return _node, nil
@@ -123,8 +151,12 @@ func (_c *CredentialCreate) sqlSave(ctx context.Context) (*Credential, error) {
 func (_c *CredentialCreate) createSpec() (*Credential, *sqlgraph.CreateSpec) {
 	var (
 		_node = &Credential{config: _c.config}
-		_spec = sqlgraph.NewCreateSpec(credential.Table, sqlgraph.NewFieldSpec(credential.FieldID, field.TypeInt))
+		_spec = sqlgraph.NewCreateSpec(credential.Table, sqlgraph.NewFieldSpec(credential.FieldID, field.TypeUUID))
 	)
+	if id, ok := _c.mutation.ID(); ok {
+		_node.ID = id
+		_spec.ID.Value = &id
+	}
 	if value, ok := _c.mutation.UserID(); ok {
 		_spec.SetField(credential.FieldUserID, field.TypeUUID, value)
 		_node.UserID = value
@@ -166,6 +198,7 @@ func (_c *CredentialCreateBulk) Save(ctx context.Context) ([]*Credential, error)
 	for i := range _c.builders {
 		func(i int, root context.Context) {
 			builder := _c.builders[i]
+			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*CredentialMutation)
 				if !ok {
@@ -192,10 +225,6 @@ func (_c *CredentialCreateBulk) Save(ctx context.Context) ([]*Credential, error)
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
-				if specs[i].ID.Value != nil {
-					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int(id)
-				}
 				mutation.done = true
 				return nodes[i], nil
 			})

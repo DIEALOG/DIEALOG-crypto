@@ -16,7 +16,7 @@ import (
 type Credential struct {
 	config `json:"-"`
 	// ID of the ent.
-	ID int `json:"id,omitempty"`
+	ID uuid.UUID `json:"id,omitempty"`
 	// UserID holds the value of the "user_id" field.
 	UserID uuid.UUID `json:"user_id,omitempty"`
 	// AccountName holds the value of the "account_name" field.
@@ -37,11 +37,9 @@ func (*Credential) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case credential.FieldEncryptedPassword, credential.FieldEncryptedDek, credential.FieldNonce:
 			values[i] = new([]byte)
-		case credential.FieldID:
-			values[i] = new(sql.NullInt64)
 		case credential.FieldAccountName:
 			values[i] = new(sql.NullString)
-		case credential.FieldUserID:
+		case credential.FieldID, credential.FieldUserID:
 			values[i] = new(uuid.UUID)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -59,11 +57,11 @@ func (_m *Credential) assignValues(columns []string, values []any) error {
 	for i := range columns {
 		switch columns[i] {
 		case credential.FieldID:
-			value, ok := values[i].(*sql.NullInt64)
-			if !ok {
-				return fmt.Errorf("unexpected type %T for field id", value)
+			if value, ok := values[i].(*uuid.UUID); !ok {
+				return fmt.Errorf("unexpected type %T for field id", values[i])
+			} else if value != nil {
+				_m.ID = *value
 			}
-			_m.ID = int(value.Int64)
 		case credential.FieldUserID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
 				return fmt.Errorf("unexpected type %T for field user_id", values[i])

@@ -2,8 +2,20 @@
 
 package ent
 
+import (
+	"github.com/DIEALOG/DIEALOG-crypto/ent/credential"
+	"github.com/DIEALOG/DIEALOG-crypto/ent/schema"
+	"github.com/google/uuid"
+)
+
 // The init function reads all schema descriptors with runtime code
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
+	credentialFields := schema.Credential{}.Fields()
+	_ = credentialFields
+	// credentialDescID is the schema descriptor for id field.
+	credentialDescID := credentialFields[0].Descriptor()
+	// credential.DefaultID holds the default value on creation for the id field.
+	credential.DefaultID = credentialDescID.Default.(func() uuid.UUID)
 }

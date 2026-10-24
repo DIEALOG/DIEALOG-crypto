@@ -13,6 +13,7 @@ type Credential struct {
 
 func (Credential) Fields() []ent.Field {
 	return []ent.Field{
+		field.UUID("id", uuid.UUID{}).Default(uuid.New).Immutable().StorageKey("id"),
 		field.UUID("user_id", uuid.UUID{}),
 		field.String("account_name"),
 		field.Bytes("encrypted_password"), // AES-256-GCM 암호문

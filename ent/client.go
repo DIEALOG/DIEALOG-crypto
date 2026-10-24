@@ -10,6 +10,7 @@ import (
 	"reflect"
 
 	"github.com/DIEALOG/DIEALOG-crypto/ent/migrate"
+	"github.com/google/uuid"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
@@ -257,7 +258,7 @@ func (c *CredentialClient) UpdateOne(_m *Credential) *CredentialUpdateOne {
 }
 
 // UpdateOneID returns an update builder for the given id.
-func (c *CredentialClient) UpdateOneID(id int) *CredentialUpdateOne {
+func (c *CredentialClient) UpdateOneID(id uuid.UUID) *CredentialUpdateOne {
 	mutation := newCredentialMutation(c.config, OpUpdateOne, withCredentialID(id))
 	return &CredentialUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
@@ -274,7 +275,7 @@ func (c *CredentialClient) DeleteOne(_m *Credential) *CredentialDeleteOne {
 }
 
 // DeleteOneID returns a builder for deleting the given entity by its id.
-func (c *CredentialClient) DeleteOneID(id int) *CredentialDeleteOne {
+func (c *CredentialClient) DeleteOneID(id uuid.UUID) *CredentialDeleteOne {
 	builder := c.Delete().Where(credential.ID(id))
 	builder.mutation.id = &id
 	builder.mutation.op = OpDeleteOne
@@ -291,12 +292,12 @@ func (c *CredentialClient) Query() *CredentialQuery {
 }
 
 // Get returns a Credential entity by its id.
-func (c *CredentialClient) Get(ctx context.Context, id int) (*Credential, error) {
+func (c *CredentialClient) Get(ctx context.Context, id uuid.UUID) (*Credential, error) {
 	return c.Query().Where(credential.ID(id)).Only(ctx)
 }
 
 // GetX is like Get, but panics if an error occurs.
-func (c *CredentialClient) GetX(ctx context.Context, id int) *Credential {
+func (c *CredentialClient) GetX(ctx context.Context, id uuid.UUID) *Credential {
 	obj, err := c.Get(ctx, id)
 	if err != nil {
 		panic(err)
