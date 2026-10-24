@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"log"
 
 	"github.com/gofiber/contrib/v3/swaggo"
@@ -66,6 +67,11 @@ func main() {
 		panic(err)
 	}
 	defer client.Close()
+
+	if err = client.Schema.Create(context.Background()); err != nil {
+		panic(err)
+	}
+
 	kmsService := kms.NewMockKMSService([]byte(config.E.MockKMSMasterKey))
 	credRepo := repository.NewCredentialRepository(client)
 	credUseCase := usecase.NewCredentialUseCase(credRepo, kmsService)
