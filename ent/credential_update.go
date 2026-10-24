@@ -12,6 +12,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/DIEALOG/DIEALOG-crypto/ent/credential"
 	"github.com/DIEALOG/DIEALOG-crypto/ent/predicate"
+	"github.com/google/uuid"
 )
 
 // CredentialUpdate is the builder for updating Credential entities.
@@ -28,13 +29,13 @@ func (_u *CredentialUpdate) Where(ps ...predicate.Credential) *CredentialUpdate 
 }
 
 // SetUserID sets the "user_id" field.
-func (_u *CredentialUpdate) SetUserID(v string) *CredentialUpdate {
+func (_u *CredentialUpdate) SetUserID(v uuid.UUID) *CredentialUpdate {
 	_u.mutation.SetUserID(v)
 	return _u
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (_u *CredentialUpdate) SetNillableUserID(v *string) *CredentialUpdate {
+func (_u *CredentialUpdate) SetNillableUserID(v *uuid.UUID) *CredentialUpdate {
 	if v != nil {
 		_u.SetUserID(*v)
 	}
@@ -115,7 +116,7 @@ func (_u *CredentialUpdate) sqlSave(ctx context.Context) (_node int, err error) 
 		}
 	}
 	if value, ok := _u.mutation.UserID(); ok {
-		_spec.SetField(credential.FieldUserID, field.TypeString, value)
+		_spec.SetField(credential.FieldUserID, field.TypeUUID, value)
 	}
 	if value, ok := _u.mutation.AccountName(); ok {
 		_spec.SetField(credential.FieldAccountName, field.TypeString, value)
@@ -150,13 +151,13 @@ type CredentialUpdateOne struct {
 }
 
 // SetUserID sets the "user_id" field.
-func (_u *CredentialUpdateOne) SetUserID(v string) *CredentialUpdateOne {
+func (_u *CredentialUpdateOne) SetUserID(v uuid.UUID) *CredentialUpdateOne {
 	_u.mutation.SetUserID(v)
 	return _u
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (_u *CredentialUpdateOne) SetNillableUserID(v *string) *CredentialUpdateOne {
+func (_u *CredentialUpdateOne) SetNillableUserID(v *uuid.UUID) *CredentialUpdateOne {
 	if v != nil {
 		_u.SetUserID(*v)
 	}
@@ -267,7 +268,7 @@ func (_u *CredentialUpdateOne) sqlSave(ctx context.Context) (_node *Credential, 
 		}
 	}
 	if value, ok := _u.mutation.UserID(); ok {
-		_spec.SetField(credential.FieldUserID, field.TypeString, value)
+		_spec.SetField(credential.FieldUserID, field.TypeUUID, value)
 	}
 	if value, ok := _u.mutation.AccountName(); ok {
 		_spec.SetField(credential.FieldAccountName, field.TypeString, value)

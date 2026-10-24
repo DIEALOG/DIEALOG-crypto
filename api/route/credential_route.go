@@ -13,7 +13,6 @@ func NewCredentialRoute(app fiber.Router, service domain.CredentialUseCase) {
 	credentials := app.Group("/credentials")
 	credentials.Use(middleware.NewInternalAuthMiddleware(&config.E))
 
-	credentials.Post("/", handler.StorePassword(service))
 	credentials.Post("/store", handler.StorePassword(service))
 	credentials.Post("/retrieve", handler.GetPassword(service))
 }

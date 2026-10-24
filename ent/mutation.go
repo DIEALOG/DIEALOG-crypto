@@ -12,6 +12,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/DIEALOG/DIEALOG-crypto/ent/credential"
 	"github.com/DIEALOG/DIEALOG-crypto/ent/predicate"
+	"github.com/google/uuid"
 )
 
 const (
@@ -32,7 +33,7 @@ type CredentialMutation struct {
 	op                 Op
 	typ                string
 	id                 *int
-	user_id            *string
+	user_id            *uuid.UUID
 	account_name       *string
 	encrypted_password *[]byte
 	encrypted_dek      *[]byte
@@ -142,12 +143,12 @@ func (m *CredentialMutation) IDs(ctx context.Context) ([]int, error) {
 }
 
 // SetUserID sets the "user_id" field.
-func (m *CredentialMutation) SetUserID(s string) {
-	m.user_id = &s
+func (m *CredentialMutation) SetUserID(u uuid.UUID) {
+	m.user_id = &u
 }
 
 // UserID returns the value of the "user_id" field in the mutation.
-func (m *CredentialMutation) UserID() (r string, exists bool) {
+func (m *CredentialMutation) UserID() (r uuid.UUID, exists bool) {
 	v := m.user_id
 	if v == nil {
 		return
@@ -158,7 +159,7 @@ func (m *CredentialMutation) UserID() (r string, exists bool) {
 // OldUserID returns the old "user_id" field's value of the Credential entity.
 // If the Credential object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *CredentialMutation) OldUserID(ctx context.Context) (v string, err error) {
+func (m *CredentialMutation) OldUserID(ctx context.Context) (v uuid.UUID, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldUserID is only allowed on UpdateOne operations")
 	}
@@ -418,7 +419,7 @@ func (m *CredentialMutation) OldField(ctx context.Context, name string) (ent.Val
 func (m *CredentialMutation) SetField(name string, value ent.Value) error {
 	switch name {
 	case credential.FieldUserID:
-		v, ok := value.(string)
+		v, ok := value.(uuid.UUID)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}

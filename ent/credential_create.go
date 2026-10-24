@@ -10,6 +10,7 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/DIEALOG/DIEALOG-crypto/ent/credential"
+	"github.com/google/uuid"
 )
 
 // CredentialCreate is the builder for creating a Credential entity.
@@ -20,7 +21,7 @@ type CredentialCreate struct {
 }
 
 // SetUserID sets the "user_id" field.
-func (_c *CredentialCreate) SetUserID(v string) *CredentialCreate {
+func (_c *CredentialCreate) SetUserID(v uuid.UUID) *CredentialCreate {
 	_c.mutation.SetUserID(v)
 	return _c
 }
@@ -125,7 +126,7 @@ func (_c *CredentialCreate) createSpec() (*Credential, *sqlgraph.CreateSpec) {
 		_spec = sqlgraph.NewCreateSpec(credential.Table, sqlgraph.NewFieldSpec(credential.FieldID, field.TypeInt))
 	)
 	if value, ok := _c.mutation.UserID(); ok {
-		_spec.SetField(credential.FieldUserID, field.TypeString, value)
+		_spec.SetField(credential.FieldUserID, field.TypeUUID, value)
 		_node.UserID = value
 	}
 	if value, ok := _c.mutation.AccountName(); ok {

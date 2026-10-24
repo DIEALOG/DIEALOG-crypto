@@ -9,6 +9,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"github.com/DIEALOG/DIEALOG-crypto/ent/credential"
+	"github.com/google/uuid"
 )
 
 // Credential is the model entity for the Credential schema.
@@ -17,7 +18,7 @@ type Credential struct {
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
 	// UserID holds the value of the "user_id" field.
-	UserID string `json:"user_id,omitempty"`
+	UserID uuid.UUID `json:"user_id,omitempty"`
 	// AccountName holds the value of the "account_name" field.
 	AccountName string `json:"account_name,omitempty"`
 	// EncryptedPassword holds the value of the "encrypted_password" field.
@@ -38,8 +39,10 @@ func (*Credential) scanValues(columns []string) ([]any, error) {
 			values[i] = new([]byte)
 		case credential.FieldID:
 			values[i] = new(sql.NullInt64)
-		case credential.FieldUserID, credential.FieldAccountName:
+		case credential.FieldAccountName:
 			values[i] = new(sql.NullString)
+		case credential.FieldUserID:
+			values[i] = new(uuid.UUID)
 		default:
 			values[i] = new(sql.UnknownType)
 		}
@@ -62,10 +65,10 @@ func (_m *Credential) assignValues(columns []string, values []any) error {
 			}
 			_m.ID = int(value.Int64)
 		case credential.FieldUserID:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*uuid.UUID); !ok {
 				return fmt.Errorf("unexpected type %T for field user_id", values[i])
-			} else if value.Valid {
-				_m.UserID = value.String
+			} else if value != nil {
+				_m.UserID = *value
 			}
 		case credential.FieldAccountName:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -128,7 +131,7 @@ func (_m *Credential) String() string {
 	builder.WriteString("Credential(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
 	builder.WriteString("user_id=")
-	builder.WriteString(_m.UserID)
+	builder.WriteString(fmt.Sprintf("%v", _m.UserID))
 	builder.WriteString(", ")
 	builder.WriteString("account_name=")
 	builder.WriteString(_m.AccountName)
