@@ -16,7 +16,7 @@ func StorePassword(credentialService domain.CredentialUseCase) fiber.Handler {
 			return c.Status(http.StatusBadRequest).JSON(domain.ErrorResponse{Message: "잘못된 요청 형식입니다."})
 		}
 
-		if err := credentialService.StorePassword(c.Context(), &req.UserID, &req); err != nil {
+		if err := credentialService.StorePassword(c.RequestCtx(), &req.UserID, &req); err != nil {
 			return c.Status(http.StatusInternalServerError).JSON(domain.ErrorResponse{Message: err.Error()})
 		}
 
@@ -32,9 +32,9 @@ func GetPassword(credentialService domain.CredentialUseCase) fiber.Handler {
 		}
 
 		// UseCase 실행 (KMS DEK 복호화 + AES-GCM 복호화)
-		plainPasswordBytes, err := credentialService.GetPassword(c.Context(), &req.UserID, req.AccountName)
+		plainPasswordBytes, err := credentialService.GetPassword(c.RequestCtx(), &req.UserID, req.AccountName)
 		if err != nil {
-			return c.Status(http.StatusNotFound).JSON(domain.ErrorResponse{Message: err.Error()})
+			return RespondError(c, err)
 		}
 		defer crypto.ZeroBytes(plainPasswordBytes) // 응답 직후 메모리 파기
 

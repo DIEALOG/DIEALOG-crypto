@@ -66,6 +66,7 @@ func main() {
 		panic(err)
 	}
 	defer client.Close()
+
 	kmsService := kms.NewMockKMSService([]byte(config.E.MockKMSMasterKey))
 	credRepo := repository.NewCredentialRepository(client)
 	credUseCase := usecase.NewCredentialUseCase(credRepo, kmsService)

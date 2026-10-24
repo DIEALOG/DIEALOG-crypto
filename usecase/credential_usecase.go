@@ -5,6 +5,7 @@ import (
 
 	backend "github.com/DIEALOG/DIEALOG-backend/domain"
 	"github.com/DIEALOG/DIEALOG-crypto/domain"
+	"github.com/DIEALOG/DIEALOG-crypto/ent"
 	"github.com/DIEALOG/DIEALOG-crypto/internal/crypto"
 )
 
@@ -54,17 +55,25 @@ func (u *credentialUseCase) StorePassword(ctx context.Context, userID *backend.I
 func (u *credentialUseCase) GetPassword(ctx context.Context, userID *backend.ID, accountName string) ([]byte, error) {
 	cred, err := u.repo.GetByAccountName(ctx, userID, accountName)
 	if err != nil {
+		if ent.IsNotFound(err) {
+			return nil, domain.NewNotFoundError(err)
+		}
 		return nil, err
 	}
 
 	// KMS로 DEK 복호화
 	plainDEK, err := u.kms.DecryptDataKey(ctx, cred.EncryptedDEK)
 	if err != nil {
-		return nil, err
+		return nil, domain.NewInternalServerError(err)
 	}
 	defer crypto.ZeroBytes(plainDEK)
 
 	// AES-GCM 복호화 (UserID AAD 검증)
 	aad := (*userID)[:]
-	return crypto.DecryptAESGCM(plainDEK, cred.EncryptedPassword, cred.Nonce, aad)
+	pwd, err := crypto.DecryptAESGCM(plainDEK, cred.EncryptedPassword, cred.Nonce, aad)
+	if err != nil {
+		return nil, domain.NewInternalServerError(err)
+	}
+
+	return pwd, nil
 }
