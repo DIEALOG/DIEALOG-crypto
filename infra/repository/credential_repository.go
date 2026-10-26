@@ -17,7 +17,26 @@ func NewCredentialRepository(client *ent.Client) domain.CredentialRepository {
 }
 
 func (r *credentialRepository) Create(ctx context.Context, c *domain.Credential) error {
-	_, err := r.client.Credential.
+	exist, err := r.client.Credential.
+		Query().
+		Where(
+			credential.AccountNameEQ(c.AccountName),
+			credential.UserIDEQ(c.UserID),
+		).
+		Only(ctx)
+	if err == nil {
+		return r.client.Credential.
+			UpdateOne(exist).
+			SetEncryptedPassword(c.EncryptedPassword).
+			SetEncryptedDek(c.EncryptedDEK).
+			SetNonce(c.Nonce).
+			Exec(ctx)
+	}
+	if !ent.IsNotFound(err) {
+		return err
+	}
+
+	_, err = r.client.Credential.
 		Create().
 		SetUserID(c.UserID).
 		SetAccountName(c.AccountName).
@@ -28,12 +47,12 @@ func (r *credentialRepository) Create(ctx context.Context, c *domain.Credential)
 	return err
 }
 
-func (r *credentialRepository) GetByAccountName(ctx context.Context, userID *domain.ID, accountName string) (*domain.Credential, error) {
+func (r *credentialRepository) GetByAccountNameAndUserID(ctx context.Context, userID *domain.ID, accountName string) (*domain.Credential, error) {
 	entCred, err := r.client.Credential.
 		Query().
 		Where(
-			credential.UserIDEQ(*userID),
 			credential.AccountNameEQ(accountName),
+			credential.UserIDEQ(*userID),
 		).
 		Only(ctx)
 
@@ -42,4 +61,21 @@ func (r *credentialRepository) GetByAccountName(ctx context.Context, userID *dom
 	}
 
 	return ToDomainCredential(entCred), nil
+}
+
+func (r *credentialRepository) DeleteByAccountNameAndUserID(ctx context.Context, userID *domain.ID, accountName string) error {
+	n, err := r.client.Credential.
+		Delete().
+		Where(
+			credential.AccountNameEQ(accountName),
+			credential.UserIDEQ(*userID),
+		).
+		Exec(ctx)
+	if err != nil {
+		return err
+	}
+	if n == 0 {
+		return &ent.NotFoundError{}
+	}
+	return nil
 }

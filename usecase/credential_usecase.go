@@ -52,7 +52,7 @@ func (u *credentialUseCase) StorePassword(ctx context.Context, userID *domain.ID
 }
 
 func (u *credentialUseCase) GetPassword(ctx context.Context, userID *domain.ID, accountName string) ([]byte, error) {
-	cred, err := u.repo.GetByAccountName(ctx, userID, accountName)
+	cred, err := u.repo.GetByAccountNameAndUserID(ctx, userID, accountName)
 	if err != nil {
 		if ent.IsNotFound(err) {
 			return nil, domain.NewNotFoundError(err)
@@ -75,4 +75,16 @@ func (u *credentialUseCase) GetPassword(ctx context.Context, userID *domain.ID, 
 	}
 
 	return pwd, nil
+}
+
+func (u *credentialUseCase) DeletePassword(ctx context.Context, userID *domain.ID, accountName string) error {
+	err := u.repo.DeleteByAccountNameAndUserID(ctx, userID, accountName)
+	if err != nil {
+		if ent.IsNotFound(err) {
+			return domain.NewNotFoundError(err)
+		}
+		return domain.NewInternalServerError(err)
+	}
+
+	return nil
 }
