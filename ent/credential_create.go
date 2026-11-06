@@ -26,9 +26,9 @@ func (_c *CredentialCreate) SetUserID(v uuid.UUID) *CredentialCreate {
 	return _c
 }
 
-// SetAccountName sets the "account_name" field.
-func (_c *CredentialCreate) SetAccountName(v string) *CredentialCreate {
-	_c.mutation.SetAccountName(v)
+// SetAccountID sets the "account_id" field.
+func (_c *CredentialCreate) SetAccountID(v uuid.UUID) *CredentialCreate {
+	_c.mutation.SetAccountID(v)
 	return _c
 }
 
@@ -110,8 +110,8 @@ func (_c *CredentialCreate) check() error {
 	if _, ok := _c.mutation.UserID(); !ok {
 		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "Credential.user_id"`)}
 	}
-	if _, ok := _c.mutation.AccountName(); !ok {
-		return &ValidationError{Name: "account_name", err: errors.New(`ent: missing required field "Credential.account_name"`)}
+	if _, ok := _c.mutation.AccountID(); !ok {
+		return &ValidationError{Name: "account_id", err: errors.New(`ent: missing required field "Credential.account_id"`)}
 	}
 	if _, ok := _c.mutation.EncryptedPassword(); !ok {
 		return &ValidationError{Name: "encrypted_password", err: errors.New(`ent: missing required field "Credential.encrypted_password"`)}
@@ -161,9 +161,9 @@ func (_c *CredentialCreate) createSpec() (*Credential, *sqlgraph.CreateSpec) {
 		_spec.SetField(credential.FieldUserID, field.TypeUUID, value)
 		_node.UserID = value
 	}
-	if value, ok := _c.mutation.AccountName(); ok {
-		_spec.SetField(credential.FieldAccountName, field.TypeString, value)
-		_node.AccountName = value
+	if value, ok := _c.mutation.AccountID(); ok {
+		_spec.SetField(credential.FieldAccountID, field.TypeUUID, value)
+		_node.AccountID = value
 	}
 	if value, ok := _c.mutation.EncryptedPassword(); ok {
 		_spec.SetField(credential.FieldEncryptedPassword, field.TypeBytes, value)

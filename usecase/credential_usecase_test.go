@@ -12,9 +12,9 @@ import (
 )
 
 type mockRepo struct {
-	createFunc                      func(ctx context.Context, credential *domain.Credential) error
-	getByAccountNameAndUserIDFunc   func(ctx context.Context, userID *domain.ID, accountName string) (*domain.Credential, error)
-	deleteByAccountNameAndUserIDFunc func(ctx context.Context, userID *domain.ID, accountName string) error
+	createFunc                     func(ctx context.Context, credential *domain.Credential) error
+	getByAccountIDAndUserIDFunc    func(ctx context.Context, userID *domain.ID, accountID *domain.ID) (*domain.Credential, error)
+	deleteByAccountIDAndUserIDFunc func(ctx context.Context, userID *domain.ID, accountID *domain.ID) error
 }
 
 func (m *mockRepo) Create(ctx context.Context, credential *domain.Credential) error {
@@ -24,16 +24,16 @@ func (m *mockRepo) Create(ctx context.Context, credential *domain.Credential) er
 	return nil
 }
 
-func (m *mockRepo) GetByAccountNameAndUserID(ctx context.Context, userID *domain.ID, accountName string) (*domain.Credential, error) {
-	if m.getByAccountNameAndUserIDFunc != nil {
-		return m.getByAccountNameAndUserIDFunc(ctx, userID, accountName)
+func (m *mockRepo) GetByAccountIDAndUserID(ctx context.Context, userID *domain.ID, accountID *domain.ID) (*domain.Credential, error) {
+	if m.getByAccountIDAndUserIDFunc != nil {
+		return m.getByAccountIDAndUserIDFunc(ctx, userID, accountID)
 	}
 	return nil, nil
 }
 
-func (m *mockRepo) DeleteByAccountNameAndUserID(ctx context.Context, userID *domain.ID, accountName string) error {
-	if m.deleteByAccountNameAndUserIDFunc != nil {
-		return m.deleteByAccountNameAndUserIDFunc(ctx, userID, accountName)
+func (m *mockRepo) DeleteByAccountIDAndUserID(ctx context.Context, userID *domain.ID, accountID *domain.ID) error {
+	if m.deleteByAccountIDAndUserIDFunc != nil {
+		return m.deleteByAccountIDAndUserIDFunc(ctx, userID, accountID)
 	}
 	return nil
 }
@@ -59,12 +59,12 @@ func (m *mockKMS) DecryptDataKey(ctx context.Context, encryptedDEK []byte) ([]by
 
 func TestDeletePassword_Success(t *testing.T) {
 	userID := uuid.New()
-	accountName := "google"
+	accountID := uuid.New()
 
 	repo := &mockRepo{
-		deleteByAccountNameAndUserIDFunc: func(ctx context.Context, uid *domain.ID, acc string) error {
-			if *uid != userID || acc != accountName {
-				t.Errorf("unexpected arguments: uid=%v, acc=%v", uid, acc)
+		deleteByAccountIDAndUserIDFunc: func(ctx context.Context, uid *domain.ID, aid *domain.ID) error {
+			if *uid != userID || *aid != accountID {
+				t.Errorf("unexpected arguments: uid=%v, aid=%v", uid, aid)
 			}
 			return nil
 		},
@@ -72,7 +72,7 @@ func TestDeletePassword_Success(t *testing.T) {
 	kms := &mockKMS{}
 	uc := usecase.NewCredentialUseCase(repo, kms)
 
-	err := uc.DeletePassword(context.Background(), &userID, accountName)
+	err := uc.DeletePassword(context.Background(), &userID, &accountID)
 	if err != nil {
 		t.Fatalf("expected nil error, got %v", err)
 	}
@@ -80,17 +80,17 @@ func TestDeletePassword_Success(t *testing.T) {
 
 func TestDeletePassword_NotFound(t *testing.T) {
 	userID := uuid.New()
-	accountName := "google"
+	accountID := uuid.New()
 
 	repo := &mockRepo{
-		deleteByAccountNameAndUserIDFunc: func(ctx context.Context, uid *domain.ID, acc string) error {
+		deleteByAccountIDAndUserIDFunc: func(ctx context.Context, uid *domain.ID, aid *domain.ID) error {
 			return &ent.NotFoundError{}
 		},
 	}
 	kms := &mockKMS{}
 	uc := usecase.NewCredentialUseCase(repo, kms)
 
-	err := uc.DeletePassword(context.Background(), &userID, accountName)
+	err := uc.DeletePassword(context.Background(), &userID, &accountID)
 	if err == nil {
 		t.Fatal("expected error, got nil")
 	}

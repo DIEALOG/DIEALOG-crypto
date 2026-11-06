@@ -34,7 +34,7 @@ type CredentialMutation struct {
 	typ                string
 	id                 *uuid.UUID
 	user_id            *uuid.UUID
-	account_name       *string
+	account_id         *uuid.UUID
 	encrypted_password *[]byte
 	encrypted_dek      *[]byte
 	nonce              *[]byte
@@ -184,40 +184,40 @@ func (m *CredentialMutation) ResetUserID() {
 	m.user_id = nil
 }
 
-// SetAccountName sets the "account_name" field.
-func (m *CredentialMutation) SetAccountName(s string) {
-	m.account_name = &s
+// SetAccountID sets the "account_id" field.
+func (m *CredentialMutation) SetAccountID(u uuid.UUID) {
+	m.account_id = &u
 }
 
-// AccountName returns the value of the "account_name" field in the mutation.
-func (m *CredentialMutation) AccountName() (r string, exists bool) {
-	v := m.account_name
+// AccountID returns the value of the "account_id" field in the mutation.
+func (m *CredentialMutation) AccountID() (r uuid.UUID, exists bool) {
+	v := m.account_id
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldAccountName returns the old "account_name" field's value of the Credential entity.
+// OldAccountID returns the old "account_id" field's value of the Credential entity.
 // If the Credential object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *CredentialMutation) OldAccountName(ctx context.Context) (v string, err error) {
+func (m *CredentialMutation) OldAccountID(ctx context.Context) (v uuid.UUID, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldAccountName is only allowed on UpdateOne operations")
+		return v, errors.New("OldAccountID is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldAccountName requires an ID field in the mutation")
+		return v, errors.New("OldAccountID requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldAccountName: %w", err)
+		return v, fmt.Errorf("querying old value for OldAccountID: %w", err)
 	}
-	return oldValue.AccountName, nil
+	return oldValue.AccountID, nil
 }
 
-// ResetAccountName resets all changes to the "account_name" field.
-func (m *CredentialMutation) ResetAccountName() {
-	m.account_name = nil
+// ResetAccountID resets all changes to the "account_id" field.
+func (m *CredentialMutation) ResetAccountID() {
+	m.account_id = nil
 }
 
 // SetEncryptedPassword sets the "encrypted_password" field.
@@ -366,8 +366,8 @@ func (m *CredentialMutation) Fields() []string {
 	if m.user_id != nil {
 		fields = append(fields, credential.FieldUserID)
 	}
-	if m.account_name != nil {
-		fields = append(fields, credential.FieldAccountName)
+	if m.account_id != nil {
+		fields = append(fields, credential.FieldAccountID)
 	}
 	if m.encrypted_password != nil {
 		fields = append(fields, credential.FieldEncryptedPassword)
@@ -388,8 +388,8 @@ func (m *CredentialMutation) Field(name string) (ent.Value, bool) {
 	switch name {
 	case credential.FieldUserID:
 		return m.UserID()
-	case credential.FieldAccountName:
-		return m.AccountName()
+	case credential.FieldAccountID:
+		return m.AccountID()
 	case credential.FieldEncryptedPassword:
 		return m.EncryptedPassword()
 	case credential.FieldEncryptedDek:
@@ -407,8 +407,8 @@ func (m *CredentialMutation) OldField(ctx context.Context, name string) (ent.Val
 	switch name {
 	case credential.FieldUserID:
 		return m.OldUserID(ctx)
-	case credential.FieldAccountName:
-		return m.OldAccountName(ctx)
+	case credential.FieldAccountID:
+		return m.OldAccountID(ctx)
 	case credential.FieldEncryptedPassword:
 		return m.OldEncryptedPassword(ctx)
 	case credential.FieldEncryptedDek:
@@ -431,12 +431,12 @@ func (m *CredentialMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetUserID(v)
 		return nil
-	case credential.FieldAccountName:
-		v, ok := value.(string)
+	case credential.FieldAccountID:
+		v, ok := value.(uuid.UUID)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetAccountName(v)
+		m.SetAccountID(v)
 		return nil
 	case credential.FieldEncryptedPassword:
 		v, ok := value.([]byte)
@@ -511,8 +511,8 @@ func (m *CredentialMutation) ResetField(name string) error {
 	case credential.FieldUserID:
 		m.ResetUserID()
 		return nil
-	case credential.FieldAccountName:
-		m.ResetAccountName()
+	case credential.FieldAccountID:
+		m.ResetAccountID()
 		return nil
 	case credential.FieldEncryptedPassword:
 		m.ResetEncryptedPassword()

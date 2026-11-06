@@ -19,6 +19,6 @@ func NewCredentialRoute(app fiber.Router, service domain.CredentialUseCase) {
 	credentials.Delete("/delete", handler.DeletePassword(service))
 	credentials.Delete("", handler.DeletePassword(service))
 	credentials.Delete("/", handler.DeletePassword(service))
-	credentials.Get("/:user_id/:account_name", handler.GetPassword(service))
-	credentials.Delete("/:user_id/:account_name", handler.DeletePassword(service))
+	credentials.Get("/:user_id/:account_id", handler.GetPassword(service))
+	credentials.Delete("/:user_id/:account_id", handler.DeletePassword(service))
 }

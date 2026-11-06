@@ -19,8 +19,8 @@ type Credential struct {
 	ID uuid.UUID `json:"id,omitempty"`
 	// UserID holds the value of the "user_id" field.
 	UserID uuid.UUID `json:"user_id,omitempty"`
-	// AccountName holds the value of the "account_name" field.
-	AccountName string `json:"account_name,omitempty"`
+	// AccountID holds the value of the "account_id" field.
+	AccountID uuid.UUID `json:"account_id,omitempty"`
 	// EncryptedPassword holds the value of the "encrypted_password" field.
 	EncryptedPassword []byte `json:"encrypted_password,omitempty"`
 	// EncryptedDek holds the value of the "encrypted_dek" field.
@@ -37,9 +37,7 @@ func (*Credential) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case credential.FieldEncryptedPassword, credential.FieldEncryptedDek, credential.FieldNonce:
 			values[i] = new([]byte)
-		case credential.FieldAccountName:
-			values[i] = new(sql.NullString)
-		case credential.FieldID, credential.FieldUserID:
+		case credential.FieldID, credential.FieldUserID, credential.FieldAccountID:
 			values[i] = new(uuid.UUID)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -68,11 +66,11 @@ func (_m *Credential) assignValues(columns []string, values []any) error {
 			} else if value != nil {
 				_m.UserID = *value
 			}
-		case credential.FieldAccountName:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field account_name", values[i])
-			} else if value.Valid {
-				_m.AccountName = value.String
+		case credential.FieldAccountID:
+			if value, ok := values[i].(*uuid.UUID); !ok {
+				return fmt.Errorf("unexpected type %T for field account_id", values[i])
+			} else if value != nil {
+				_m.AccountID = *value
 			}
 		case credential.FieldEncryptedPassword:
 			if value, ok := values[i].(*[]byte); !ok {
@@ -131,8 +129,8 @@ func (_m *Credential) String() string {
 	builder.WriteString("user_id=")
 	builder.WriteString(fmt.Sprintf("%v", _m.UserID))
 	builder.WriteString(", ")
-	builder.WriteString("account_name=")
-	builder.WriteString(_m.AccountName)
+	builder.WriteString("account_id=")
+	builder.WriteString(fmt.Sprintf("%v", _m.AccountID))
 	builder.WriteString(", ")
 	builder.WriteString("encrypted_password=")
 	builder.WriteString(fmt.Sprintf("%v", _m.EncryptedPassword))

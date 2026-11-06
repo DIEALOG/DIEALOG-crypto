@@ -38,7 +38,7 @@ func (u *credentialUseCase) StorePassword(ctx context.Context, userID *domain.ID
 
 	cred := &domain.Credential{
 		UserID:            *userID,
-		AccountName:       req.AccountName,
+		AccountID:         req.AccountID,
 		EncryptedPassword: ciphertext,
 		EncryptedDEK:      encryptedDEK,
 		Nonce:             nonce,
@@ -47,8 +47,8 @@ func (u *credentialUseCase) StorePassword(ctx context.Context, userID *domain.ID
 	return u.repo.Create(ctx, cred)
 }
 
-func (u *credentialUseCase) GetPassword(ctx context.Context, userID *domain.ID, accountName string) ([]byte, error) {
-	cred, err := u.repo.GetByAccountNameAndUserID(ctx, userID, accountName)
+func (u *credentialUseCase) GetPassword(ctx context.Context, userID *domain.ID, accountID *domain.ID) ([]byte, error) {
+	cred, err := u.repo.GetByAccountIDAndUserID(ctx, userID, accountID)
 	if err != nil {
 		if ent.IsNotFound(err) {
 			return nil, domain.NewNotFoundError(err)
@@ -72,8 +72,8 @@ func (u *credentialUseCase) GetPassword(ctx context.Context, userID *domain.ID, 
 	return pwd, nil
 }
 
-func (u *credentialUseCase) DeletePassword(ctx context.Context, userID *domain.ID, accountName string) error {
-	err := u.repo.DeleteByAccountNameAndUserID(ctx, userID, accountName)
+func (u *credentialUseCase) DeletePassword(ctx context.Context, userID *domain.ID, accountID *domain.ID) error {
+	err := u.repo.DeleteByAccountIDAndUserID(ctx, userID, accountID)
 	if err != nil {
 		if ent.IsNotFound(err) {
 			return domain.NewNotFoundError(err)

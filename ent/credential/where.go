@@ -58,9 +58,9 @@ func UserID(v uuid.UUID) predicate.Credential {
 	return predicate.Credential(sql.FieldEQ(FieldUserID, v))
 }
 
-// AccountName applies equality check predicate on the "account_name" field. It's identical to AccountNameEQ.
-func AccountName(v string) predicate.Credential {
-	return predicate.Credential(sql.FieldEQ(FieldAccountName, v))
+// AccountID applies equality check predicate on the "account_id" field. It's identical to AccountIDEQ.
+func AccountID(v uuid.UUID) predicate.Credential {
+	return predicate.Credential(sql.FieldEQ(FieldAccountID, v))
 }
 
 // EncryptedPassword applies equality check predicate on the "encrypted_password" field. It's identical to EncryptedPasswordEQ.
@@ -118,69 +118,44 @@ func UserIDLTE(v uuid.UUID) predicate.Credential {
 	return predicate.Credential(sql.FieldLTE(FieldUserID, v))
 }
 
-// AccountNameEQ applies the EQ predicate on the "account_name" field.
-func AccountNameEQ(v string) predicate.Credential {
-	return predicate.Credential(sql.FieldEQ(FieldAccountName, v))
+// AccountIDEQ applies the EQ predicate on the "account_id" field.
+func AccountIDEQ(v uuid.UUID) predicate.Credential {
+	return predicate.Credential(sql.FieldEQ(FieldAccountID, v))
 }
 
-// AccountNameNEQ applies the NEQ predicate on the "account_name" field.
-func AccountNameNEQ(v string) predicate.Credential {
-	return predicate.Credential(sql.FieldNEQ(FieldAccountName, v))
+// AccountIDNEQ applies the NEQ predicate on the "account_id" field.
+func AccountIDNEQ(v uuid.UUID) predicate.Credential {
+	return predicate.Credential(sql.FieldNEQ(FieldAccountID, v))
 }
 
-// AccountNameIn applies the In predicate on the "account_name" field.
-func AccountNameIn(vs ...string) predicate.Credential {
-	return predicate.Credential(sql.FieldIn(FieldAccountName, vs...))
+// AccountIDIn applies the In predicate on the "account_id" field.
+func AccountIDIn(vs ...uuid.UUID) predicate.Credential {
+	return predicate.Credential(sql.FieldIn(FieldAccountID, vs...))
 }
 
-// AccountNameNotIn applies the NotIn predicate on the "account_name" field.
-func AccountNameNotIn(vs ...string) predicate.Credential {
-	return predicate.Credential(sql.FieldNotIn(FieldAccountName, vs...))
+// AccountIDNotIn applies the NotIn predicate on the "account_id" field.
+func AccountIDNotIn(vs ...uuid.UUID) predicate.Credential {
+	return predicate.Credential(sql.FieldNotIn(FieldAccountID, vs...))
 }
 
-// AccountNameGT applies the GT predicate on the "account_name" field.
-func AccountNameGT(v string) predicate.Credential {
-	return predicate.Credential(sql.FieldGT(FieldAccountName, v))
+// AccountIDGT applies the GT predicate on the "account_id" field.
+func AccountIDGT(v uuid.UUID) predicate.Credential {
+	return predicate.Credential(sql.FieldGT(FieldAccountID, v))
 }
 
-// AccountNameGTE applies the GTE predicate on the "account_name" field.
-func AccountNameGTE(v string) predicate.Credential {
-	return predicate.Credential(sql.FieldGTE(FieldAccountName, v))
+// AccountIDGTE applies the GTE predicate on the "account_id" field.
+func AccountIDGTE(v uuid.UUID) predicate.Credential {
+	return predicate.Credential(sql.FieldGTE(FieldAccountID, v))
 }
 
-// AccountNameLT applies the LT predicate on the "account_name" field.
-func AccountNameLT(v string) predicate.Credential {
-	return predicate.Credential(sql.FieldLT(FieldAccountName, v))
+// AccountIDLT applies the LT predicate on the "account_id" field.
+func AccountIDLT(v uuid.UUID) predicate.Credential {
+	return predicate.Credential(sql.FieldLT(FieldAccountID, v))
 }
 
-// AccountNameLTE applies the LTE predicate on the "account_name" field.
-func AccountNameLTE(v string) predicate.Credential {
-	return predicate.Credential(sql.FieldLTE(FieldAccountName, v))
-}
-
-// AccountNameContains applies the Contains predicate on the "account_name" field.
-func AccountNameContains(v string) predicate.Credential {
-	return predicate.Credential(sql.FieldContains(FieldAccountName, v))
-}
-
-// AccountNameHasPrefix applies the HasPrefix predicate on the "account_name" field.
-func AccountNameHasPrefix(v string) predicate.Credential {
-	return predicate.Credential(sql.FieldHasPrefix(FieldAccountName, v))
-}
-
-// AccountNameHasSuffix applies the HasSuffix predicate on the "account_name" field.
-func AccountNameHasSuffix(v string) predicate.Credential {
-	return predicate.Credential(sql.FieldHasSuffix(FieldAccountName, v))
-}
-
-// AccountNameEqualFold applies the EqualFold predicate on the "account_name" field.
-func AccountNameEqualFold(v string) predicate.Credential {
-	return predicate.Credential(sql.FieldEqualFold(FieldAccountName, v))
-}
-
-// AccountNameContainsFold applies the ContainsFold predicate on the "account_name" field.
-func AccountNameContainsFold(v string) predicate.Credential {
-	return predicate.Credential(sql.FieldContainsFold(FieldAccountName, v))
+// AccountIDLTE applies the LTE predicate on the "account_id" field.
+func AccountIDLTE(v uuid.UUID) predicate.Credential {
+	return predicate.Credential(sql.FieldLTE(FieldAccountID, v))
 }
 
 // EncryptedPasswordEQ applies the EQ predicate on the "encrypted_password" field.

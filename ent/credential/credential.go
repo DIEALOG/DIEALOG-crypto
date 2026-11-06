@@ -14,8 +14,8 @@ const (
 	FieldID = "id"
 	// FieldUserID holds the string denoting the user_id field in the database.
 	FieldUserID = "user_id"
-	// FieldAccountName holds the string denoting the account_name field in the database.
-	FieldAccountName = "account_name"
+	// FieldAccountID holds the string denoting the account_id field in the database.
+	FieldAccountID = "account_id"
 	// FieldEncryptedPassword holds the string denoting the encrypted_password field in the database.
 	FieldEncryptedPassword = "encrypted_password"
 	// FieldEncryptedDek holds the string denoting the encrypted_dek field in the database.
@@ -30,7 +30,7 @@ const (
 var Columns = []string{
 	FieldID,
 	FieldUserID,
-	FieldAccountName,
+	FieldAccountID,
 	FieldEncryptedPassword,
 	FieldEncryptedDek,
 	FieldNonce,
@@ -64,7 +64,7 @@ func ByUserID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldUserID, opts...).ToFunc()
 }
 
-// ByAccountName orders the results by the account_name field.
-func ByAccountName(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldAccountName, opts...).ToFunc()
+// ByAccountID orders the results by the account_id field.
+func ByAccountID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldAccountID, opts...).ToFunc()
 }

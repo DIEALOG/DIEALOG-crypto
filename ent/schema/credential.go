@@ -15,7 +15,7 @@ func (Credential) Fields() []ent.Field {
 	return []ent.Field{
 		field.UUID("id", uuid.UUID{}).Default(uuid.New).Immutable().StorageKey("id"),
 		field.UUID("user_id", uuid.UUID{}),
-		field.String("account_name"),
+		field.UUID("account_id", uuid.UUID{}),
 		field.Bytes("encrypted_password"), // AES-256-GCM 암호문
 		field.Bytes("encrypted_dek"),      // KMS KEK로 암호화된 DEK
 		field.Bytes("nonce"),              // GCM Nonce (12 bytes)

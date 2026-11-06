@@ -12,7 +12,7 @@ var (
 	CredentialsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID},
 		{Name: "user_id", Type: field.TypeUUID},
-		{Name: "account_name", Type: field.TypeString},
+		{Name: "account_id", Type: field.TypeUUID},
 		{Name: "encrypted_password", Type: field.TypeBytes},
 		{Name: "encrypted_dek", Type: field.TypeBytes},
 		{Name: "nonce", Type: field.TypeBytes},

@@ -5,15 +5,15 @@ Go 기반 **비밀번호 및 기밀 정보 암호화 vault** 백엔드 애플리
 ## 핵심 기능
 
 ### 1. 암호화된 자격 증명 저장소 (Encrypted Credential Vault)
-- **기능**: 사용자별 계정 이름과 비밀번호를 암호화하여 저장 및 조회
+- **기능**: 사용자별 계정 ID(UUID)와 비밀번호를 암호화하여 저장 및 조회
 - **암호화 방식**: 
   - 데이터 키(DEK)를 AWS KMS 방식 생성 및 관리
   - 마스터 키(KEK)로 DEK 암호화 후 Credential에 저장
   - 실제 비밀번호는 DEK로 AES-256-GCM 암호화
 - **지원 연산**:
   - `StorePassword`: 신규 자격 증명 저장 (존재하면 업데이트)
-  - `GetPassword`: 계정 이름 기반 복호화된 비밀번호 조회 (조회 즉시 메모리에서 파기)
-  - `DeletePassword`: 계정 이름 기반 자격 증명 삭제
+  - `GetPassword`: 계정 ID 기반 복호화된 비밀번호 조회 (조회 즉시 메모리에서 파기)
+  - `DeletePassword`: 계정 ID 기반 자격 증명 삭제
 
 ### 2. 내부 서비스 인증 (Internal Service Auth)
 - **기능**: 모든 Credential API 라우트에 대해 `X-Internal-Secret-Key` 헤더 검증

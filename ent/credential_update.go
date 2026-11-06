@@ -42,16 +42,16 @@ func (_u *CredentialUpdate) SetNillableUserID(v *uuid.UUID) *CredentialUpdate {
 	return _u
 }
 
-// SetAccountName sets the "account_name" field.
-func (_u *CredentialUpdate) SetAccountName(v string) *CredentialUpdate {
-	_u.mutation.SetAccountName(v)
+// SetAccountID sets the "account_id" field.
+func (_u *CredentialUpdate) SetAccountID(v uuid.UUID) *CredentialUpdate {
+	_u.mutation.SetAccountID(v)
 	return _u
 }
 
-// SetNillableAccountName sets the "account_name" field if the given value is not nil.
-func (_u *CredentialUpdate) SetNillableAccountName(v *string) *CredentialUpdate {
+// SetNillableAccountID sets the "account_id" field if the given value is not nil.
+func (_u *CredentialUpdate) SetNillableAccountID(v *uuid.UUID) *CredentialUpdate {
 	if v != nil {
-		_u.SetAccountName(*v)
+		_u.SetAccountID(*v)
 	}
 	return _u
 }
@@ -118,8 +118,8 @@ func (_u *CredentialUpdate) sqlSave(ctx context.Context) (_node int, err error) 
 	if value, ok := _u.mutation.UserID(); ok {
 		_spec.SetField(credential.FieldUserID, field.TypeUUID, value)
 	}
-	if value, ok := _u.mutation.AccountName(); ok {
-		_spec.SetField(credential.FieldAccountName, field.TypeString, value)
+	if value, ok := _u.mutation.AccountID(); ok {
+		_spec.SetField(credential.FieldAccountID, field.TypeUUID, value)
 	}
 	if value, ok := _u.mutation.EncryptedPassword(); ok {
 		_spec.SetField(credential.FieldEncryptedPassword, field.TypeBytes, value)
@@ -164,16 +164,16 @@ func (_u *CredentialUpdateOne) SetNillableUserID(v *uuid.UUID) *CredentialUpdate
 	return _u
 }
 
-// SetAccountName sets the "account_name" field.
-func (_u *CredentialUpdateOne) SetAccountName(v string) *CredentialUpdateOne {
-	_u.mutation.SetAccountName(v)
+// SetAccountID sets the "account_id" field.
+func (_u *CredentialUpdateOne) SetAccountID(v uuid.UUID) *CredentialUpdateOne {
+	_u.mutation.SetAccountID(v)
 	return _u
 }
 
-// SetNillableAccountName sets the "account_name" field if the given value is not nil.
-func (_u *CredentialUpdateOne) SetNillableAccountName(v *string) *CredentialUpdateOne {
+// SetNillableAccountID sets the "account_id" field if the given value is not nil.
+func (_u *CredentialUpdateOne) SetNillableAccountID(v *uuid.UUID) *CredentialUpdateOne {
 	if v != nil {
-		_u.SetAccountName(*v)
+		_u.SetAccountID(*v)
 	}
 	return _u
 }
@@ -270,8 +270,8 @@ func (_u *CredentialUpdateOne) sqlSave(ctx context.Context) (_node *Credential, 
 	if value, ok := _u.mutation.UserID(); ok {
 		_spec.SetField(credential.FieldUserID, field.TypeUUID, value)
 	}
-	if value, ok := _u.mutation.AccountName(); ok {
-		_spec.SetField(credential.FieldAccountName, field.TypeString, value)
+	if value, ok := _u.mutation.AccountID(); ok {
+		_spec.SetField(credential.FieldAccountID, field.TypeUUID, value)
 	}
 	if value, ok := _u.mutation.EncryptedPassword(); ok {
 		_spec.SetField(credential.FieldEncryptedPassword, field.TypeBytes, value)

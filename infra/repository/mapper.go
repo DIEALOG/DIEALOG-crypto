@@ -12,7 +12,7 @@ func ToDomainCredential(e *ent.Credential) *domain.Credential {
 	return &domain.Credential{
 		ID:                e.ID,
 		UserID:            e.UserID,
-		AccountName:       e.AccountName,
+		AccountID:         e.AccountID,
 		EncryptedPassword: e.EncryptedPassword,
 		EncryptedDEK:      e.EncryptedDek,
 		Nonce:             e.Nonce,
