@@ -43,11 +43,11 @@ clean: ## Delete the build file
 
 docker-build: ## Build docker image
 	@echo Building the application...
-	docker build -t janghanul090801/pico-backend:latest .
+	docker build -t janghanul090801/DIEALOG-crypto:latest .
 
 docker-push: ## Push docker image
 	@echo Pushing the docker image...
-	docker push janghanul090801/pico-backend:latest
+	docker push janghanul090801/DIEALOG-crypto:latest
 
 compose-up: ## Up docker-compose
 	@echo Upping docker compose...
